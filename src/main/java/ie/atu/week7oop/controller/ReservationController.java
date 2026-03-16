@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/reservation")
 public class ReservationController {
@@ -28,11 +30,6 @@ public class ReservationController {
 
     @GetMapping
     public ResponseEntity<List<Reservation>> getAll() {
-        return responseEntity.ok(reservationService.getAllReservations());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Reservation> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(reservationService.getReservationById(id));
+        return ResponseEntity.ok(reservationService.getAllReservations());
     }
 }

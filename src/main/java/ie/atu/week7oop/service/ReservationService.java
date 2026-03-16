@@ -2,7 +2,6 @@ package ie.atu.week7oop.service;
 
 import ie.atu.week7oop.exception.ReservationConflictException;
 import ie.atu.week7oop.model.Reservation;
-import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,32 +17,24 @@ public class ReservationService {
 
         reservation.setReservationID(nextId++);
 
+        int newStart = reservation.getStartHour();
+        int newEnd = newStart + reservation.getDurationHour();
 
         for (Reservation existing : reservations) {
 
             if (existing.getEquipmentTag().equals(reservation.getEquipmentTag()) &&
-                    existing.getReservationDate().equals(reservation.getReservationDate()))
+                    existing.getReservationDate().equals(reservation.getReservationDate())) {
+                int existingStart = existing.getStartHour();
+                int existingEnd = existingStart + existing.getDurationHours();
 
-        }
-
-        int existingStart = existing.getStartHour();
-        int existingEnd = existingStart + existing.getDurationHours();
-
-        if (existingStart < newEnd && newStart < existingEnd) {
-            reservation.setReservationID(nextId--);
-            throw new ReservationConflictException("Time slot already booked");
-
-
+                if (existingStart < newEnd && newStart < existingEnd) {
+                    reservation.setReservationID(nextId--);
+                    throw new ReservationConflictException("Time slot already booked");
+                }
+            }
         }
         reservation.add(reservation);
         return reservation;
-    }
 
-    public List<Reservation> getAllReservations() {
-        return reservations;
-    }
-
-
-    public @Nullable Reservation getReservationById(Long id) {
     }
 }
