@@ -1,7 +1,9 @@
 package ie.atu.week7oop.service;
 
 import ie.atu.week7oop.exception.ReservationConflictException;
+import ie.atu.week7oop.exception.ReservationNotFoundException;
 import ie.atu.week7oop.model.Reservation;
+import ie.atu.week7oop.repository.ReservationRepo;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -10,8 +12,13 @@ import java.util.List;
 @Service
 public class ReservationService {
 
+    private final ReservationRepo reservationRepo;
     private List<Reservation> reservations = new ArrayList<>();
     private long nextId = 1;
+
+    public ReservationService(ReservationRepo reservationRepo) {
+        this.reservationRepo = reservationRepo;
+    }
 
     public Reservation addReservation(Reservation reservation) {
 
@@ -33,8 +40,19 @@ public class ReservationService {
                 }
             }
         }
-        reservation.add(reservation);
+        reservationRepo.save(reservation);
         return reservation;
+    }
+    public List<Reservation> getAllReservations() {
+        return reservations;
+    }
 
+    public Reservation getReservationById(long id) {
+        for (Reservation reservation : reservations) {
+            if (reservation.getReservationID().equals(id)) {
+                return reservation;
+            }
+        }
+        throw new ReservationNotFoundException("Reservation not found");
     }
 }

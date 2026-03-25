@@ -30,6 +30,6 @@ public class ReservationController {
 
     @GetMapping
     public ResponseEntity<List<Reservation>> getAll() {
-        return ResponseEntity.ok(reservationService.getAllReservations());
+        return ResponseEntity.ok((List<Reservation>) reservationService.getAllReservations());
     }
 }
