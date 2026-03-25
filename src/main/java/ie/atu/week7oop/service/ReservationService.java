@@ -4,8 +4,10 @@ import ie.atu.week7oop.exception.ReservationConflictException;
 import ie.atu.week7oop.exception.ReservationNotFoundException;
 import ie.atu.week7oop.model.Reservation;
 import ie.atu.week7oop.repository.ReservationRepo;
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,11 +50,10 @@ public class ReservationService {
     }
 
     public Reservation getReservationById(long id) {
-        for (Reservation reservation : reservations) {
-            if (reservation.getReservationID().equals(id)) {
-                return reservation;
-            }
-        }
-        throw new ReservationNotFoundException("Reservation not found");
+        return reservationRepo.findById(id).orElseThrow(() -> new ReservationNotFoundException("Reservation not found"));
+    }
+
+    public List<Reservation> getAllReservationsByDate(LocalDate reservationdate) {
+        return reservationRepo.findByReservationDate(reservationdate);
     }
 }
